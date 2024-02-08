@@ -1,4 +1,5 @@
 ﻿using sudoku.Exceptions;
+using sudoku.SudokuBoardParts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,74 +10,49 @@ namespace sudoku.InputAndOutput
 {
     public class SudokuBoardFormatter
     {
-        private static void PrintHorizontalLine(int blockWidth, string horizontalBlockSeparator, char symbol)
+        private static void PrintHorizontalLine(int blockHeightAndWidth, string horizontalBlockSeparator, char symbol)
         {
-            for (int i = 0; i < blockWidth; i++)
+            for (int i = 0; i < blockHeightAndWidth; i++)
                 Console.Write(symbol + horizontalBlockSeparator);
             Console.Write(symbol);
             Console.WriteLine();
         }
 
-        private static void PrintWithColor(int[,] board , int i , int j)
+        private static void PrintWithColor(ISudokuBoard board , int i , int j)
         {
             ConsoleColor originalColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write((char)(board[i, j] + '0'));
+            Console.Write((char)(board.GetCell(i,j).number + '0'));
             Console.ForegroundColor = originalColor;
         }
-        public static void PrintBoard(int[,] board)
+        public static void PrintBoard(ISudokuBoard board)
         {
-            int rows = board.GetLength(0);
-            int cols = board.GetLength(1);
-            int blockHeight = (int)Math.Sqrt(rows);
-            int blockWidth = (int)Math.Sqrt(cols);
+            int blockHeightAndWidth = (int)Math.Sqrt(board.boardSize);
+            int temp = blockHeightAndWidth;
 
-            int tempBlockWidth = blockWidth;
+            if (Math.Sqrt(board.boardSize) != blockHeightAndWidth)
+                temp++;
 
-            if (Math.Sqrt(cols) != blockWidth)
-                tempBlockWidth++;
-
-            int horizontalBlockSeparatorLength = blockWidth * 2 + 1;
+            int horizontalBlockSeparatorLength = blockHeightAndWidth * 2 + 1;
             string horizontalBlockSeparator = new string('-', horizontalBlockSeparatorLength);
 
-            PrintHorizontalLine(tempBlockWidth, horizontalBlockSeparator,'+');
+            PrintHorizontalLine(temp, horizontalBlockSeparator,'+');
 
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < board.boardSize; i++)
             {
-                if (i != 0 && i % blockHeight == 0)
-                    PrintHorizontalLine(tempBlockWidth, horizontalBlockSeparator, '-');
+                if (i != 0 && i % blockHeightAndWidth == 0)
+                    PrintHorizontalLine(temp, horizontalBlockSeparator, '-');
                 Console.Write("| ");
-                for (int j = 0; j < cols; j++)
+                for (int j = 0; j < board.boardSize; j++)
                 {
-                    if (j != 0 && j % blockWidth == 0)
+                    if (j != 0 && j % blockHeightAndWidth == 0)
                         Console.Write("| ");
                     PrintWithColor(board, i, j);                   
                     Console.Write(" ");
                 }
                 Console.WriteLine("|");
             }
-            PrintHorizontalLine(tempBlockWidth, horizontalBlockSeparator, '+');
-        }
-
-        public static int[,] FormatInputToBoard(string input) 
-        {
-            input = input.Replace(" ", "").Replace("/t",""); // remove white spaces
-            int size = (int)Math.Sqrt(input.Length);
-
-            Console.WriteLine(input.Length);
-
-            if (size * size != input.Length)
-            {
-                throw new NotValidBoardException(input.Length);
-            }
-
-            int[,] board = new int[size,size];
-             
-            for (int i = 0;i < size;i++)         
-                for(int j = 0;j < size;j++)
-                    board[i, j] = (int)(input[i * size + j]) - 48;
-
-            return board;
+            PrintHorizontalLine(temp, horizontalBlockSeparator, '+');
         }
     }
 }

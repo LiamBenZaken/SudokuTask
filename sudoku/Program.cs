@@ -1,4 +1,5 @@
 ﻿using sudoku.InputAndOutput;
+using sudoku.SudokuBoardParts;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,8 +20,8 @@ namespace sudoku
             string fileInput = fileReader.ReadInput();
             Console.WriteLine(fileInput);
 
-            int[,] boardFromConsole = SudokuBoardFormatter.FormatInputToBoard(fileInput);
-            SudokuBoardFormatter.PrintBoard(boardFromConsole);
+            ISudokuBoard board = new MatrixBoard(fileInput);
+            SudokuBoardFormatter.PrintBoard(board);
             
 
             /* CONSOLE INPUT
