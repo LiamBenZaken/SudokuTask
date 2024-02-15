@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\SudokuSolver.cs" />
+    <Compile Include="Exceptions\NotSolvableBoardException.cs" />
     <Compile Include="Exceptions\NotValidBoardException.cs" />
     <Compile Include="InputAndOutput\ConsoleInputReader.cs" />
     <Compile Include="InputAndOutput\FileInputReader.cs" />

@@ -10,6 +10,14 @@ namespace sudoku.InputAndOutput
 {
     public class SudokuBoardFormatter
     {
+        public static string BoardAsString(ISudokuBoard board)
+        {
+            string solvedBoard="";
+            for (int i = 0; i < board.boardSize; i++)
+                for (int j = 0; j < board.boardSize; j++)
+                    solvedBoard += (char)(board.GetCell(i, j).number + '0');
+            return solvedBoard;
+        }
         private static void PrintHorizontalLine(int blockHeightAndWidth, string horizontalBlockSeparator, char symbol)
         {
             for (int i = 0; i < blockHeightAndWidth; i++)
