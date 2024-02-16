@@ -10,16 +10,8 @@ namespace sudoku.InputAndOutput
     {
         public string ReadInput()
         {
-            try
-            {
-                Console.WriteLine("enter the sudoku board:");
-                return Console.ReadLine();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error reading input: {ex.Message}");
-                return null;
-            }
+            Console.WriteLine("enter the sudoku board:");
+            return Console.ReadLine();
         }
     }
 }

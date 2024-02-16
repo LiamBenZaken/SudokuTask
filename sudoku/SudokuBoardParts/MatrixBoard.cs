@@ -10,22 +10,21 @@ namespace sudoku.SudokuBoardParts
     {
         public int boardSize { get; private set; }
         private Cell[,] board;
-        public List<Cell> emptyCells{ get; private set; }
+        public List<Cell> emptyCells { get; private set; }
 
         public MatrixBoard(string input)
         {
             emptyCells = new List<Cell>();
-            input = input.Replace(" ", "").Replace("/t", ""); // remove white spaces
             boardSize = (int)Math.Sqrt(input.Length);
 
-            if (!IsValidBoard(boardSize, input))
-                throw new NotValidBoardException(input.Length);
+            if (!IsValidBoard(input))
+                throw new InvalidBoardException();
 
             board = new Cell[boardSize, boardSize];
 
             for (int i = 0; i < boardSize; i++)
                 for (int j = 0; j < boardSize; j++)
-                    board[i, j] = new Cell(i,j,(int)(input[i * boardSize + j]) - 48);
+                    board[i, j] = new Cell(i, j, (int)(input[i * boardSize + j]) - 48);
             InitCellsOptions();
         }
 
@@ -39,13 +38,13 @@ namespace sudoku.SudokuBoardParts
                             board[i, j].AddOption(k);
                         emptyCells.Add(board[i, j]);
                     }
-            
+
             for (int i = 0; i < boardSize; i++)
                 for (int j = 0; j < boardSize; j++)
                 {
+                    InitConnectionCells(board[i, j], i, j);
                     if (board[i, j].number != 0)
                         RemoveOptions(i, j);
-                    InitConnectionCells(board[i, j],i,j);
                 }
         }
         public HashSet<Cell> RemoveOptions(int row, int col)
@@ -53,37 +52,21 @@ namespace sudoku.SudokuBoardParts
             HashSet<Cell> res = new HashSet<Cell>();
             Cell currentCell = board[row, col];
 
-            int boxSize = (int)Math.Sqrt(boardSize);
-            int boxStartRow = (row / boxSize) * boxSize;
-            int boxStartCol = (col / boxSize) * boxSize;
-            
-            for (int c = 0; c < boardSize; c++)
-                if (c != col && board[row,c].number == 0)
-                    if (board[row, c].RemoveOption(currentCell.number))
-                        res.Add(board[row, c]);
-
-            for (int r = 0; r < boardSize; r++)
-                if (r != row && board[r, col].number == 0)
-                    if (board[r, col].RemoveOption(currentCell.number))
-                        res.Add(board[r, col]);
-
-            for (int r = boxStartRow; r < boxStartRow + boxSize; r++)
-                for (int c = boxStartCol; c < boxStartCol + boxSize; c++)
-                    if ((r != row || c != col) && board[r, c].number == 0)
-                        if (board[r, c].RemoveOption(currentCell.number))
-                            res.Add(board[r, c]);
-
+            foreach (Cell cell in currentCell.connected)
+                if (cell.number == 0)
+                    if (cell.RemoveOption(currentCell.number))
+                        res.Add(cell);         
             return res;
         }
 
         private void InitConnectionCells(Cell cell, int row, int col)
         {
             for (int j = 0; j < boardSize; j++)
-                if (j != col && board[row, j].number == 0)
+                if (j != col)
                     cell.connected.Add(board[row, j]);
 
             for (int i = 0; i < boardSize; i++)
-                if (i != row && board[i, col].number == 0)
+                if (i != row)
                     cell.connected.Add(board[i, col]);
 
             int boxSize = (int)Math.Sqrt(boardSize);
@@ -91,7 +74,7 @@ namespace sudoku.SudokuBoardParts
             int boxStartCol = (col / boxSize) * boxSize;
             for (int i = boxStartRow; i < boxStartRow + boxSize; i++)
                 for (int j = boxStartCol; j < boxStartCol + boxSize; j++)
-                    if ((i != row || j != col) && board[i, j].number == 0)
+                    if (i != row || j != col)
                         cell.connected.Add(board[i, j]);
         }
         public void SetNumber(int row, int col, int number)
@@ -99,10 +82,24 @@ namespace sudoku.SudokuBoardParts
             board[row, col].SetNum(number);
         }
 
-        public bool IsValidBoard(int boardSize, string input)
+        public bool IsValidBoard(string input)
         {
+            if (input == null || input.Length == 0)
+                return false;
             if (boardSize * boardSize != input.Length)
                 return false;
+
+            int[] numCounts = new int[boardSize + 1];
+            for (int i = 0; i < input.Length; i++)
+            {
+                int num = (int)(input[i]) - '0';
+                if (num < 0 || num > boardSize)
+                    return false;
+                numCounts[num]++;
+                if (num!= 0 &&numCounts[num] > boardSize)
+                    return false;
+            }
+
             return true;
         }
 

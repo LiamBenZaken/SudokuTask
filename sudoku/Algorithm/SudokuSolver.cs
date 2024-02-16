@@ -1,4 +1,5 @@
-﻿using sudoku.InputAndOutput;
+﻿using sudoku.Exceptions;
+using sudoku.InputAndOutput;
 using sudoku.SudokuBoardParts;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,19 @@ namespace sudoku.Algorithm
 {
     public class SudokuSolver
     {
-        public static ISudokuBoard Solve(ISudokuBoard board)
+        public static ISudokuBoard SolveSudoku(ISudokuBoard board)
+        {
+            Cell min = FindCellWithLeastOptionsFirstTime(board);
+
+            ISudokuBoard SolvedBoard = Solve(board,min);
+            if (SolvedBoard == null)
+                throw new NotSolvableBoardException();
+            return SolvedBoard;
+        }
+        private static ISudokuBoard Solve(ISudokuBoard board,Cell cell)
         {
 
-            Cell CellWithLeastOptions = FindCellWithLeastOptions(board);
+            Cell CellWithLeastOptions = FindCellWithLeastOptions(cell);
             int row = CellWithLeastOptions.row;
             int col = CellWithLeastOptions.col;
             if (row == -1 || col == -1)
@@ -23,7 +33,7 @@ namespace sudoku.Algorithm
                 board.SetNumber(row, col, option);
                 HashSet<Cell>affectedCells = board.RemoveOptions(row, col);
 
-                ISudokuBoard result = Solve(board);
+                ISudokuBoard result = Solve(board,board.GetCell(row, col));
                 if (result != null && IsSolved(board.emptyCells))
                     return board;
 
@@ -36,7 +46,21 @@ namespace sudoku.Algorithm
         }
 
 
-        private static Cell FindCellWithLeastOptions(ISudokuBoard board)
+        private static Cell FindCellWithLeastOptions(Cell min)
+        {
+            int minOptions = int.MaxValue;
+            Cell minCell = new Cell(-1, -1, -1);
+
+            foreach (Cell cell in min.connected)
+                if (cell.number == 0 && cell.options.Count < minOptions)
+                {
+                    minOptions = cell.options.Count;
+                    minCell = cell;
+                }
+            return minCell;
+        }
+
+        private static Cell FindCellWithLeastOptionsFirstTime(ISudokuBoard board)
         {
             int minOptions = int.MaxValue;
             Cell minCell = new Cell(-1, -1, -1);
@@ -49,24 +73,9 @@ namespace sudoku.Algorithm
                 }
             return minCell;
         }
-
         private static bool IsSolved(List<Cell> emptyCells)
         {
             return emptyCells.Count == 0;
-        }
-
-        private static HashSet<Cell> ApplyNakedSingle(ISudokuBoard board,ref int flag)
-        {
-            HashSet<Cell> affectedCells = new HashSet<Cell>();
-            foreach (Cell cell in board.emptyCells)
-                if (cell.options.Count == 1)
-                {
-                    board.SetNumber(cell.row, cell.col, cell.options.First());
-                    affectedCells = board.RemoveOptions(cell.row, cell.col);
-                    board.emptyCells.Remove(cell);
-                    flag = 1;
-                }
-            return affectedCells;
         }
     }
 }

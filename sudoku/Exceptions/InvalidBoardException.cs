@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace sudoku.Exceptions
 {
-    public class NotSolvableBoardException : SudokuException
+    public class InvalidBoardException : SudokuException
     {
-        public NotSolvableBoardException() : base("Connot solve this board , it unsolvable!") { }
+        public InvalidBoardException(): base($"Cannot build sudoku board , this board is not Valid!") { }
     }
 }

@@ -18,7 +18,7 @@ namespace sudoku.SudokuBoardParts
 
         void SetNumber(int row, int col, int value);
 
-        Boolean IsValidBoard(int boardSize,string input);
+        Boolean IsValidBoard(string input);
 
     }
 }

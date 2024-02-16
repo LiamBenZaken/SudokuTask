@@ -10,22 +10,21 @@ namespace sudoku.InputAndOutput
 {
     public class FileInputReader : IInputReader
     {
-        private string _fileName;
+        private string fileName;
 
         public FileInputReader(string fileName)
         {
-            this._fileName = fileName; 
+            this.fileName = fileName; 
         }
         public string ReadInput()
         {
             try
             {
-                return File.ReadAllText(_fileName);
+                return File.ReadAllText(fileName);
             }
             catch(Exception ex) 
             {
-                Console.WriteLine($"Error reading from file: {ex.Message}");
-                return null;
+                throw new IOException($"Error reading from file: {ex.Message}");
             }
         }
     }
