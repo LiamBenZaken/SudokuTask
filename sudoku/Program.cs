@@ -12,17 +12,27 @@ using System.Threading.Tasks;
 
 namespace sudoku
 {
+    /// <summary>
+    /// The main class containing the entry point for the Sudoku solver program.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// The entry point for the Sudoku solver program.
+        /// Provides a simple console-based user interface for interacting with the Sudoku solver.
+        /// </summary>
+        /// <param name="args">Command line arguments passed to the program.</param>
         static void Main(string[] args)
         {
             Console.WriteLine("--------Welcome to Liam's sudoku solver!--------");
+            Console.WriteLine();
+            Console.WriteLine();
             while (true)
             {
                 Console.WriteLine("Please select an option:\n1. Enter the sudoku in the console\n2. Load sudoku from file\n3. Exit");
                 Console.Write("Enter your choice (1, 2, or 3): ");
                 string choice = Console.ReadLine();
-                string input = "";
+                string input;
 
                 switch (choice)
                 {
@@ -78,7 +88,7 @@ namespace sudoku
                 {
                     board = SudokuSolver.SolveSudoku(board);
                 }
-                catch(NotSolvableBoardException ex)
+                catch (NotSolvableBoardException ex)
                 {
                     Console.WriteLine($"Error: {ex.Message}");
                     continue;

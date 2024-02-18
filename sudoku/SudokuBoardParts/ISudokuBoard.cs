@@ -3,10 +3,13 @@ using System.Collections.Generic;
 
 namespace sudoku.SudokuBoardParts
 {
+    /// <summary>
+    /// Represents a Sudoku board.
+    /// </summary>
     public interface ISudokuBoard
     {
-        int boardSize { get;}
-        List<Cell> emptyCells { get;}
+        int boardSize { get; }
+        List<Cell> emptyCells { get; }
 
         Cell GetCell(int row, int col);
 

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace sudoku.InputAndOutput
 {
+    /// <summary>
+    /// Represents an interface for reading Sudoku board input.
+    /// </summary>
     public interface IInputReader
     {
         string ReadInput();
