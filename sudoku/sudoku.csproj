@@ -43,8 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\SudokuSolver.cs" />
+    <Compile Include="Exceptions\NotSolvableBoardException.cs" />
+    <Compile Include="Exceptions\InvalidBoardException.cs" />
+    <Compile Include="Exceptions\SudokuException.cs" />
+    <Compile Include="InputAndOutput\ConsoleInputReader.cs" />
+    <Compile Include="InputAndOutput\FileInputReader.cs" />
+    <Compile Include="InputAndOutput\IInputReader.cs" />
+    <Compile Include="InputAndOutput\SudokuBoardFormatter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SudokuBoardParts\Cell.cs" />
+    <Compile Include="SudokuBoardParts\ISudokuBoard.cs" />
+    <Compile Include="SudokuBoardParts\MatrixBoard.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
