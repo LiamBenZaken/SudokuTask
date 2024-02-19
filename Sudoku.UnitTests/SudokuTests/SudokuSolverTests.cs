@@ -83,5 +83,27 @@ namespace Sudoku.UnitTests.SudokuTests
             Assert.AreEqual(-1, result.col);
             Assert.AreEqual(-1, result.number);
         }
+
+        [TestMethod]
+        public void IsOnlyOneSolve_ReturnsTrue_WhenOnlyOneSolution()
+        {
+            string input = "530070000600195000098000060800060003400803001700020006060000280000419005000080079";
+            MatrixBoard board = new MatrixBoard(input);
+
+            bool result = SudokuSolver.IsOnlyOneSolve(board);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void IsOnlyOneSolve_ReturnsFalse_WhenMultipleSolutionsPossible()
+        {
+            string input = "000006000059000008200008000045000000003000000006003054000325006000000000000000000";
+            MatrixBoard board = new MatrixBoard(input);
+
+            bool result = SudokuSolver.IsOnlyOneSolve(board);
+
+            Assert.IsFalse(result);
+        }
     }
 }
