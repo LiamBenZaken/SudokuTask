@@ -21,16 +21,21 @@ namespace sudoku.Algorithm
         public static ISudokuBoard SolveSudoku(ISudokuBoard board)
         {
             Cell min = FindCellWithLeastOptionsFirstTime(board);
-
-            ISudokuBoard SolvedBoard = Solve(board, min);
+            bool flag = IsOnlyOneSolve(board);
+            
+            ISudokuBoard SolvedBoard = Solve(board, min,flag);
             if (SolvedBoard == null)
                 throw new NotSolvableBoardException();
             return SolvedBoard;
         }
-        private static ISudokuBoard Solve(ISudokuBoard board, Cell cell)
+        private static ISudokuBoard Solve(ISudokuBoard board, Cell cell,bool flag)
         {
+            Cell CellWithLeastOptions;
+            if (!flag)
+                CellWithLeastOptions = FindCellWithLeastOptions(cell);
+            else
+                CellWithLeastOptions = FindCellWithLeastOptionsFirstTime(board);
 
-            Cell CellWithLeastOptions = FindCellWithLeastOptions(cell);
             int row = CellWithLeastOptions.row;
             int col = CellWithLeastOptions.col;
             if (row == -1 || col == -1)
@@ -42,7 +47,7 @@ namespace sudoku.Algorithm
                 board.SetNumber(row, col, option);
                 HashSet<Cell> affectedCells = board.RemoveOptions(row, col);
 
-                ISudokuBoard result = Solve(board, board.GetCell(row, col));
+                ISudokuBoard result = Solve(board, board.GetCell(row, col),flag);
                 if (result != null && IsSolved(board.emptyCells))
                     return board;
 
@@ -100,6 +105,21 @@ namespace sudoku.Algorithm
         public static bool IsSolved(List<Cell> emptyCells)
         {
             return emptyCells.Count == 0;
+        }
+
+        /// <summary>
+        /// Determines whether the Sudoku board has only one possible solution.
+        /// </summary>
+        /// <param name="board">The Sudoku board to check.</param>
+        /// <returns>True if the Sudoku board has only one possible solution; otherwise, false.</returns>
+        public static bool IsOnlyOneSolve(ISudokuBoard board)
+        {
+            HashSet<int> uniqe = new HashSet<int>();
+            for (int i = 0; i < board.boardSize; i++)
+                for (int j = 0; j < board.boardSize; j++)
+                    if (board.GetCell(i, j).number != 0)
+                        uniqe.Add(board.GetCell(i, j).number);
+            return uniqe.Count >= board.boardSize-1;
         }
     }
 }

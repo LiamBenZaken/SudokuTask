@@ -141,6 +141,7 @@ namespace sudoku.SudokuBoardParts
             }
             return true;
         }
+
         public void SetNumber(int row, int col, int number)
         {
             board[row, col].SetNum(number);
