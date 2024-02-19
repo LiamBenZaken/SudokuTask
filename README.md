@@ -46,7 +46,7 @@ The Sudoku solver employs a backtracking algorithm, which is a brute-force techn
 
 - Try a valid option from the option list: It then tries placing a valid option into the cell with the least options.
 
-- Starting with the recursion: After placing a random option , the algorithm made the recursion call and repeat again on the process but now it picking the cell with the least options from the affected cells that affcted from the last call. by that the algorithm save a lot of iterations and solve the puzzle more fast.
+- Starting with the recursion: After placing a random option , the algorithm made the recursion call and repeat again on the process but now it picking the cell with the least options from the affected cells that affcted from the last call . by that the algorithm save a lot of iterations and solve the puzzle more fast. but this is true only for the most sudoku boards with more then 1 options to solve them . if the board has only 1 uniqe solution it kinda make the solver to be slower. so I check if the board has only 1 solution , if it hasnt I doing what i said before , but if it has only 1 , I staying with the check that i made in the first time and picking that cell with the least options from the empty cells that located all around the board.
 
 - Check for validity: the algorithm checks whether it violates any of the Sudoku rules:
 
